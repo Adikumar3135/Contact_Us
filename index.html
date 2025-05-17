@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+        body{
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(90deg, #BE8CEF 0%, rgba(61, 46, 232, 0.83) 100%);
+            color: black;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem 1rem;
+        }
+        .form-container {
+            max-width: 450px;
+            width: 100%;
+            align-items: center;
+            padding: 2rem 2.5rem;
+            border-radius: 50px;
+            box-shadow: 2px 2px 5px black , -2px -2px 5px black ;
+        }
+        h1 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-left: -20px;
+            margin-bottom: 6px;
+        }
+        #contact{
+            align-items: center;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            margin-bottom: 6px;
+            margin-left: -20px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            outline-offset: 2px;
+        }
+        .error-msg {
+            font-size: 0.85rem;
+            color: red;
+            margin-bottom: 12px;
+            min-height: 18px;
+        }
+        button.submit-btn {
+            color: rgb(23, 26, 219);
+            font-weight: 600;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            width: 100%;
+            margin-top: 12px;
+            transition: background-color 0.3s;
+        }
+        button.submit-btn:disabled {
+            background-color: #93b6ef;
+            cursor: not-allowed;
+        }
+        button.submit-btn:hover:not(:disabled) {
+            background-color: #03497f;
+            color: white;
+        }
+        .success-message {
+            text-align: center;
+            color: rgb(9, 216, 9);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+        @media (max-width: 480px) {
+            .form-container {
+            padding: 1.5rem 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="form-container" role="form" aria-label="Contact Form">
+    <h1>Contact Us</h1>
+    <form id="contact-form" novalidate>
+        <label for="name">Name*</label>
+        <input type="text" id="name" name="name" autocomplete="name" required aria-required="true" aria-describedby="name-error" />
+        <div class="error-msg" id="name-error" aria-live="polite"></div>
+
+        <label for="email">Email*</span></label>
+        <input type="email" id="email" name="email" autocomplete="email" required aria-required="true" aria-describedby="email-error" />
+        <div class="error-msg" id="email-error" aria-live="polite"></div>
+        
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" name="subject" maxlength="100" aria-describedby="subject-error" />
+        <div class="error-msg" id="subject-error" aria-live="polite"></div>
+
+        <label for="message">Message<span aria-hidden="true">*</span></label>
+        <textarea id="message" name="message" rows="5" required aria-required="true" aria-describedby="message-error"></textarea>
+        <div class="error-msg" id="message-error" aria-live="polite"></div>
+
+        <button type="submit" class="submit-btn" disabled>Send Message</button>
+        <div class="success-message" id="success-message" role="alert" aria-live="assertive"></div>
+    </form>
+    </section>
+<script>
+    (() => {
+        const form = document.getElementById('contact-form');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const subjectInput = document.getElementById('subject');
+        const messageInput = document.getElementById('message');
+        const submitBtn = form.querySelector('button.submit-btn');
+        const successMsgDiv = document.getElementById('success-message');
+
+        const nameError = document.getElementById('name-error');
+        const emailError = document.getElementById('email-error');
+        const subjectError = document.getElementById('subject-error');
+        const messageError = document.getElementById('message-error');
+
+        function validateName(){
+            const value = nameInput.value.trim();
+            if (value.length < 2){
+                nameError.textContent = "Please enter at least 2 characters.";
+                return false;
+            }
+            nameError.textContent = "";
+            return true;
+        }
+
+        function validateEmail() {
+            const value = emailInput.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)){
+                emailError.textContent = "Please enter a valid email.";
+                return false;
+            }
+            emailError.textContent = "";
+            return true;
+        }
+        function validateSubject() {
+            const value = subjectInput.value.trim();
+            if (value.length > 100) {
+                subjectError.textContent = "Subject cannot exceed 100 characters.";
+                return false;
+            }
+            subjectError.textContent = "";
+            return true;
+        }
+
+        function validateMessage() {
+            const value = messageInput.value.trim();
+            if (value.length < 10) {
+                messageError.textContent = "Please enter at least 10 characters.";
+                return false;
+            }
+            messageError.textContent = "";
+            return true;
+        }
+
+        function validateForm(){
+            const validName = validateName();
+            const validEmail = validateEmail();
+            const validSubject = validateSubject();
+            const validMessage = validateMessage();
+
+            const isValid = validName && validEmail && validSubject && validMessage;
+            submitBtn.disabled = !isValid;
+            return isValid;
+        }
+
+        nameInput.addEventListener('input', () => {
+            validateName();
+            validateForm();
+        });
+        emailInput.addEventListener('input', () => {
+            validateEmail();
+            validateForm();
+        });
+        subjectInput.addEventListener('input', () => {
+            validateSubject();
+            validateForm();
+        });
+        messageInput.addEventListener('input', () => {
+            validateMessage();
+            validateForm();
+        });
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            successMsgDiv.textContent = "";
+            if (validateForm()) {
+                successMsgDiv.textContent = "Thank you for contacting us! We will get back to you soon.";
+                form.reset();
+                submitBtn.disabled = true;
+                nameError.textContent = "";
+                emailError.textContent = "";
+                subjectError.textContent = "";
+                messageError.textContent = "";
+            }
+        });
+    })();
+</script>
+    
+</body>
+</html>
